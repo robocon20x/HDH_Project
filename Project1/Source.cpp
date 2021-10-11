@@ -23,7 +23,7 @@ int ReadSector(LPCWSTR  drive, int readPoint, BYTE sector[512])
     if (device == INVALID_HANDLE_VALUE) // Open Error
     {
         printf("CreateFile: %u\n", GetLastError());
-        return 1;
+        return 0;
     }
 
     SetFilePointer(device, readPoint, NULL, FILE_BEGIN);//Set a Point to Read
@@ -31,11 +31,12 @@ int ReadSector(LPCWSTR  drive, int readPoint, BYTE sector[512])
     if (!ReadFile(device, sector, 512, &bytesRead, NULL))
     {
         printf("ReadFile: %u\n", GetLastError());
+        return 0;
     }
     else
     {
         printf("\nSuccess!\n");
-        return 2;
+        return 1;
     }
 }
 //chuyen bang sector thanh vector 2d string
