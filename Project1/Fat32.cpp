@@ -49,9 +49,15 @@ int fat32::readRDET()
 	}
 	else
 	{
+		vector<vector<string>> vec = to_vector(sector);
+		for (int i = 0; i < vec.size(); i++)
+		{
+			for (int j = 0; j < vec[i].size(); j++)
+				cout << vec[i][j] << " ";
+			cout << endl;
+		}
 		printf("Success!\n\n");
-		
 		return 1;
 	}
-	
 }
+
