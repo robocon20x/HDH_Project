@@ -1,14 +1,8 @@
 #include"Fat32.h"
 
-fat32::fat32(LPCWSTR  disk, vector<vector<string>> sector)
+fat32::fat32(HANDLE disk, vector<vector<string>> sector)
 {
-	device = CreateFile(disk,
-		GENERIC_READ,         
-		FILE_SHARE_READ | FILE_SHARE_WRITE, 
-		NULL,                   
-		OPEN_EXISTING,        
-		0,                  
-		NULL);
+	device = disk;
 	BootSector = sector;
 };
 
@@ -40,17 +34,24 @@ void fat32::readBootsector()
 	cout << "Sector dau tien cua vung DATA: " << sectors_of_boot + numbers_of_fats * sectors_per_fat << endl;
 };
 
-void fat32::readRDET()
+int fat32::readRDET()
 {
-	SetFilePointer(device, 512, NULL, 32768*512);
 	DWORD bytesRead;
 	BYTE sector[512];
-	ReadFile(device, sector, 512, &bytesRead, NULL);
-	vector<vector<string>> vec = to_vector(sector);
-	for (int i = 0; i < vec.size(); i++)
+
+	int readPont = (sectors_of_boot + numbers_of_fats * sectors_per_fat) * bytes_per_sector;
+	SetFilePointer(device, readPont, NULL, FILE_BEGIN);//Set a Point to Read
+
+	if (!ReadFile(device, sector, 512, &bytesRead, NULL))
 	{
-		for (int j = 0; j < vec[i].size(); j < 0)
-			cout << vec[i][j] << " ";
-		cout << endl;
+		printf("ReadFile: %u\n", GetLastError());
+		return 0;
 	}
+	else
+	{
+		printf("Success!\n\n");
+		
+		return 1;
+	}
+	
 }
