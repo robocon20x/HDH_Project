@@ -3,6 +3,7 @@
 #define _UTIL_H_
 
 #include<iostream>
+#include<cstdlib>
 #include<stdio.h>
 #include<vector>
 #include<windows.h>

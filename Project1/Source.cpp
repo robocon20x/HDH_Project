@@ -1,7 +1,6 @@
 #include"Fat32.h"
 
-using namespace std;
-int ReadSector(LPCWSTR  drive, int readPoint, BYTE sector[512])
+int ReadSector(LPCWSTR  drive, int readPoint, BYTE sector[32])
 {
     int retCode = 0;
     DWORD bytesRead;
@@ -54,6 +53,7 @@ int main(int argc, char** argv)
         fat32 drive(L"\\\\.\\F:", vec);
         cout << "Drive info: " << endl;
         drive.readBootsector();
+        drive.readRDET();
     }
 
     

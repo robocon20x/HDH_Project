@@ -6,7 +6,7 @@
 class fat32
 {
 private:
-	LPCWSTR drive;
+	HANDLE device;
 	vector<vector<string>> BootSector;
 	int bytes_per_sector; // Số bytes trên mỗi sector
 	int sectors_per_cluster; // Sc : Số bytes trên mỗi cluster
@@ -16,6 +16,7 @@ private:
 public:
 	fat32(LPCWSTR  disk, vector<vector<string>> sector);
 	void readBootsector();
+	void readRDET();
 };
 
 #endif // !_FAT_32_H_
