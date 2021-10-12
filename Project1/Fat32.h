@@ -14,9 +14,10 @@ private:
 	int numbers_of_fats; // NF : Số bảng FAT
 	int sectors_per_fat; //SF : Số sector trên 1 bảng FAT
 public:
-	fat32(LPCWSTR  disk, vector<vector<string>> sector);
+	fat32(HANDLE disk, vector<vector<string>> sector);
 	void readBootsector();
-	void readRDET();
+	int readRDET();
+	vector<vector<string>> RDET_to_vec(int readPoint);
 };
 
 #endif // !_FAT_32_H_

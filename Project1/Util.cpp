@@ -52,3 +52,29 @@ int hexstr_to_int(string hexstr)
     result = strtol(real_hex.c_str(), &offset, 0);
     return result;
 }
+
+vector<vector<string>> combine_table(vector<vector<string>> v1, vector<vector<string>> v2) {
+    int begin = v1.size();
+    for (int i = 0; i < v2.size(); i++) {
+        v1.push_back(v2[i]);
+    }
+    v2.clear();
+    return v1;
+}
+
+bool is_end(vector<vector<string>> vec) {
+    for (int i = 0; i < vec[0].size(); i++) {
+        if (vec[vec.size()-1][i] != "00") return false;
+    }
+    return true;
+}
+
+void print_table(vector<vector<string>> vec) {
+    for (int i = 0; i < vec.size(); i++) {
+        for (int j = 0; j < vec[i].size(); j++) {
+            cout << vec[i][j] << " ";
+        }
+        cout << endl;
+    }
+    return;
+}
