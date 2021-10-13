@@ -65,7 +65,5 @@ int main(int argc, char** argv)
         drive.readRDET();
     }
 
-   
-
     return 1;
 }

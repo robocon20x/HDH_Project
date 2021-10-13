@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef _UTIL_H_
 #define _UTIL_H_
 
@@ -23,13 +23,18 @@ string hexstr_tostr(string hex);
 //chuyen tu hexstr sang int
 int hexstr_to_int(string hexstr);
 
-
 //ket hop 2 vector
 vector<vector<string>> combine_table(vector<vector<string>> v1, vector<vector<string>> v2);
 
 //kiem tra vector nay co chua gia tri khong
 bool is_end(vector<vector<string>> vec);
 
+// tìm sector của ổ đĩa theo vị trí sector đầu vào
+vector<vector<string>> find_table(HANDLE device, int readPont);
+
 //in bang
 void print_table(vector<vector<string>> vec);
+
+
+
 #endif // !_UTIL_H_

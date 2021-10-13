@@ -16,8 +16,7 @@ private:
 public:
 	fat32(HANDLE disk, vector<vector<string>> sector);
 	void readBootsector();
-	int readRDET();
-	vector<vector<string>> RDET_to_vec(int readPoint);
+	void readRDET();
 };
 
 #endif // !_FAT_32_H_
