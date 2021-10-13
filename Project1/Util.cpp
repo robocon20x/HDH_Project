@@ -54,7 +54,7 @@ int hexstr_to_int(string hexstr)
 }
 
 vector<vector<string>> combine_table(vector<vector<string>> v1, vector<vector<string>> v2) {
-    int begin = v1.size();
+    /*int begin = v1.size();*/
     for (int i = 0; i < v2.size(); i++) {
         v1.push_back(v2[i]);
     }

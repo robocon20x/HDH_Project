@@ -36,11 +36,19 @@ void fat32::readBootsector()
 
 void fat32::readRDET()
 {
-	int readPoint = (sectors_of_boot + numbers_of_fats * sectors_per_fat)*bytes_per_sector;
+	int readPoint = sectors_of_boot * bytes_per_sector;
+
+	FAT = find_table(device, readPoint);
+
+	readPoint = (sectors_of_boot + numbers_of_fats * sectors_per_fat)*bytes_per_sector;
 	
 	vector<vector<string>> result = find_table(device, readPoint);
 
-	print_table(result);
+	/*print_table(result);*/
+
+	string str = hexstr_tostr(to_hexstr(result, 1, 8, 9, 0)) + hexstr_tostr(to_hexstr(result, 14, 8, 2, 0));
+
+	cout << str;
 
 	return;
 }
