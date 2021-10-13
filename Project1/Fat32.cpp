@@ -39,25 +39,32 @@ int fat32::readRDET()
 	DWORD bytesRead;
 	BYTE sector[512];
 
-	int readPont = (sectors_of_boot + numbers_of_fats * sectors_per_fat) * bytes_per_sector;
-	SetFilePointer(device, readPont, NULL, FILE_BEGIN);//Set a Point to Read
+	int readPoint = (sectors_of_boot + numbers_of_fats * sectors_per_fat) * bytes_per_sector;
+	
+	vector<vector<string>> result = fat32::RDET_to_vec(readPoint);
+	
+	print_table(result);
+
+	return 1;
+}
+
+vector<vector<string>> fat32::RDET_to_vec(int readPoint) {
+	DWORD bytesRead;
+	BYTE sector[512];
+	vector<vector<string>> result;
+	SetFilePointer(device, readPoint, NULL, FILE_BEGIN);//Set a Point to Read
 
 	if (!ReadFile(device, sector, 512, &bytesRead, NULL))
 	{
 		printf("ReadFile: %u\n", GetLastError());
-		return 0;
+		return result;
 	}
-	else
-	{
-		vector<vector<string>> vec = to_vector(sector);
-		for (int i = 0; i < vec.size(); i++)
-		{
-			for (int j = 0; j < vec[i].size(); j++)
-				cout << vec[i][j] << " ";
-			cout << endl;
-		}
-		printf("Success!\n\n");
-		return 1;
-	}
-}
 
+	result = to_vector(sector);
+
+	if (is_end(result)) {
+		return result;
+	}
+	vector<vector<string>> next = fat32::RDET_to_vec(readPoint + 512);
+	return combine_table(result, next);	
+}
