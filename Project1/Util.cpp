@@ -102,3 +102,15 @@ void print_table(vector<vector<string>> vec) {
     }
     return;
 }
+void print_Tab(int k)
+{
+    if (k == 0)
+        return;
+    if (k >= 1)
+    {
+        for (int i = 0; i < k; i++)
+        {
+            cout << "\t";
+        }
+    }
+}
