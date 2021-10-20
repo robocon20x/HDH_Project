@@ -53,6 +53,26 @@ int hexstr_to_int(string hexstr)
     return result;
 }
 
+string to_binstr(int number)
+{
+    string res;
+    while (number != 0)
+    {
+        res = (number % 2 == 0 ? "0" : "1") + res;
+        number /= 2;
+    }
+    if (res.length() < 8)
+    {
+        string sub;
+        for (int i = 7 - res.length(); i >= 0; i--)
+        {
+            sub += '0';
+        }
+        res = sub + res;
+    }
+    return res;
+}
+
 vector<vector<string>> combine_table(vector<vector<string>> v1, vector<vector<string>> v2) {
     /*int begin = v1.size();*/
     for (int i = 0; i < v2.size(); i++) {

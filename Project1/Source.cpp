@@ -45,8 +45,8 @@ int ReadSector(HANDLE& device, vector<vector<string>>& sector)//(LPCWSTR  drive,
 int main(int argc, char** argv)
 {
     vector<vector<string>> sector;
-    HANDLE device = NULL;
-    int flag = ReadSector(device, sector);
+    HANDLE disk = NULL;
+    int flag = ReadSector(disk, sector);
 
     if (!flag)
         return 0;
@@ -59,10 +59,12 @@ int main(int argc, char** argv)
     
     if (result == "FAT32")
     {
-        fat32 drive(device, sector);
-        cout << "Drive info: " << endl;
-        drive.readBootsector();
-        drive.readRDET();
+        FAT32 drive(disk, sector);
+        cout << "--------------------|DRIVE INFO|--------------------\n";
+        drive.readBoot_Sector();
+        cout << "\n-----------------------|RDET|-----------------------\n";
+
+        drive.read_RDet(find_table(disk, drive.first_Sector_Of_Data() * 512), 0);
     }
 
     return 1;

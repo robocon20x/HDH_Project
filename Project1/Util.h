@@ -23,6 +23,9 @@ string hexstr_tostr(string hex);
 //chuyen tu hexstr sang int
 int hexstr_to_int(string hexstr);
 
+//chuyen tu chuoi hex sang chuoi bin
+string to_binstr(int number);
+
 //ket hop 2 vector
 vector<vector<string>> combine_table(vector<vector<string>> v1, vector<vector<string>> v2);
 
@@ -35,6 +38,7 @@ vector<vector<string>> find_table(HANDLE device, int readPont);
 //in bang
 void print_table(vector<vector<string>> vec);
 
-
+//in tab ra man hinh
+void print_Tab(int k);
 
 #endif // !_UTIL_H_
