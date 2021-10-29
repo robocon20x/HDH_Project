@@ -63,7 +63,7 @@ vector<vector<vector<string>>> FAT32::split_Entry(vector<vector<string>> table)
             while (to_hexstr(table, 11, k, 1, 1) == "0F")
             {
                 count = count + 1;
-                k = k + 1;
+                k = k + 2;
             }
             vector<vector<string>> temp;
             for (int j = i; j < i + 2 * (count + 1); j++)
@@ -199,7 +199,7 @@ string FAT32::find_Name(vector<vector<string>> entry)
         {
             for (int j = 1; j < 16; j++)
             {
-                if (j != 11 && entry[i][j] != "00" && check_Character(entry[i][j]) == 1)
+                if (j != 11 && j != 13 && entry[i][j] != "00" && check_Character(entry[i][j]) == 1)
                     res += entry[i][j];
             }
             for (int j = 0; j < 16; j++)
@@ -248,11 +248,6 @@ string FAT32::read_Data(int readPont, int level)
             res = res + data[i][j];
         }
     }
-
-    /*vector<string> temp;
-    string tab;
-    for(int i=0;i<level;i++)*/
-
 
     return res;
 }
@@ -369,6 +364,16 @@ void FAT32::read_File(vector<vector<string>> entry, int level)
             cout << "Windows Media Player" << endl;
         if (ext == "jpg" || ext == "JPG" || ext == "jpeg" || ext == "JPEG" || ext == "png" || ext == "PNG")
             cout << "Photos" << endl;
+        if (ext == "accdb" || ext == "ACCDB")
+            cout << "Microsoft Access" << endl;
+        if (ext == "sql" || ext == "SQL")
+            cout << "SQL Server or MySQL" << endl;
+        if (ext == "pub" || ext == "PUB")
+            cout << "Microsoft Publisher" << endl;
+        if (ext == "rar" || ext == "RAR" || ext == "rar4" || ext == "RAR4" || ext == "zip" || ext == "ZIP")
+            cout << "WinRAR" << endl;
+        if (ext == "rtf" || ext == "RTF")
+            cout << "WordPad" << endl;
     }
 }
 void FAT32::read_Folder(vector<vector<string>> entry, int level)

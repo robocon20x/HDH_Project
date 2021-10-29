@@ -63,7 +63,8 @@ int main(int argc, char** argv)
         cout << "--------------------|DRIVE INFO|--------------------\n";
         drive.readBoot_Sector();
         cout << "\n-----------------------|RDET|-----------------------\n";
-
+        vector<vector<vector<string>>> table = drive.split_Entry(find_table(disk, drive.first_Sector_Of_Data() * 512));
+        
         drive.read_RDet(find_table(disk, drive.first_Sector_Of_Data() * 512), 0);
     }
 
