@@ -14,7 +14,7 @@ void FAT32::readBoot_Sector()
     cout << "- The number of bytes per sector: " << bytes_per_sector << endl;
 
     sectors_per_cluster = hexstr_to_int(to_hexstr(BootSector, 13, 0, 1, 1));
-    cout << "- The number of bytes per cluster: " << sectors_per_cluster << endl;
+    cout << "- The number of sectors per cluster: " << sectors_per_cluster << endl;
 
     sectors_of_boot = hexstr_to_int(to_hexstr(BootSector, 14, 0, 2, 1));
     cout << "- The number of bytes in Boot Sector: " << sectors_of_boot << endl;

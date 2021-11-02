@@ -1,4 +1,5 @@
 ﻿#include"Fat32.h"
+#include"NTFS.h"
 
 int ReadSector(HANDLE& device, vector<vector<string>>& sector)//(LPCWSTR  drive, int readPoint, BYTE sector[512])
 {
@@ -64,8 +65,13 @@ int main(int argc, char** argv)
         drive.readBoot_Sector();
         cout << "\n-----------------------|RDET|-----------------------\n";
         vector<vector<vector<string>>> table = drive.split_Entry(find_table(disk, drive.first_Sector_Of_Data() * 512));
-        
         drive.read_RDet(find_table(disk, drive.first_Sector_Of_Data() * 512), 0);
+    }
+    else
+    {
+        NTFS drive(disk, sector);
+        cout << "--------------------|DRIVE INFO|--------------------\n";
+        drive.readBoot_Sector();
     }
 
     return 1;

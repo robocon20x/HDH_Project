@@ -24,12 +24,18 @@
     <ClCompile Include="Fat32.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NTFS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Fat32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NTFS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
