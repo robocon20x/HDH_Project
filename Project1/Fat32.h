@@ -38,7 +38,6 @@ public:
 
 	void read_File(vector<vector<string>> entry, int level);
 	void read_Folder(vector<vector<string>> entry, int level);
-	void read_Not_File_Or_Folder(vector<vector<string>> entry, int level);
 
 	void read_RDet(vector<vector<string>> table, int level);
 };

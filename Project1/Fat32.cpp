@@ -1,11 +1,13 @@
 #include"Fat32.h"
 
+// Doc o dia
 FAT32::FAT32(HANDLE disk, vector<vector<string>> sector)
 {
 	device = disk;
 	BootSector = sector;
 };
 
+// Doc thong so Boot Sector
 void FAT32::readBoot_Sector()
 {
     cout << "- Type of File System: FAT32" << endl;
@@ -34,53 +36,82 @@ void FAT32::readBoot_Sector()
     cout << "- First sector of Data: " << sectors_of_boot + numbers_of_fats * sectors_per_fat << endl;
 }
 
+// Lay sector dau cua vung Data
 int FAT32::first_Sector_Of_Data()
 {
     return sectors_of_boot + numbers_of_fats * sectors_per_fat;
 }
 
+// Chia bang RDET/SDET thanh cac thu muc/tap tin
 vector<vector<vector<string>>> FAT32::split_Entry(vector<vector<string>> table)
 {
     vector<vector<vector<string>>> res;
 
-    for (int i = 0; i < table.size();)
+    if (table[4][0] != "00")    // Folder bi rong
     {
-        string x = to_hexstr(table, 11, i, 1, 1);
-        if (x != "0F")
+        for (int i = 0; i < table.size();)
         {
-            vector<vector<string>> temp;
-            for (int j = i; j < i + 2; j++)
+            string x = to_hexstr(table, 11, i, 1, 1);
+            if (x != "0F")      // La entry chinh
             {
-                temp.push_back(table[j]);
+                vector<vector<string>> temp;
+                for (int j = i; j < i + 2; j++)
+                {
+                    temp.push_back(table[j]);
+                }
+                res.push_back(temp);
+                i += 2;
             }
-            res.push_back(temp);
-            i += 2;
-        }
-        else
-        {
-            int k = i + 2;
-            int count = 1;
-            while (to_hexstr(table, 11, k, 1, 1) == "0F")
+            else
             {
-                count = count + 1;
-                k = k + 2;
+                int k = i + 2;
+                int count = 1;
+                while (to_hexstr(table, 11, k, 1, 1) == "0F")
+                {
+                    count = count + 1;
+                    k = k + 2;
+                }
+                vector<vector<string>> temp;
+                for (int j = i; j < i + 2 * (count + 1); j++)
+                {
+                    temp.push_back(table[j]);
+                }
+                res.push_back(temp);
+                i += 2 * (count + 1);
             }
-            vector<vector<string>> temp;
-            for (int j = i; j < i + 2 * (count + 1); j++)
-            {
-                temp.push_back(table[j]);
-            }
-            res.push_back(temp);
-            i += 2 * (count + 1);
         }
     }
+
+    // Bo cac dong thu muc goc (bat dau bang "2E") trong bang
     while (res[0][0][0] == "2E")
     {
         res.erase(res.begin());
     }
+
+    // Xoa cac file khong phai tap tin/thu muc
+    for (int i = 0; i < res.size();)
+    {
+        if (to_hexstr(res[i], 11, 0, 1, 1) != "0F")
+        {
+            if (to_hexstr(res[i], 11, 0, 1, 1) != "20" && to_hexstr(res[i], 11, 0, 1, 1) != "10")
+            {
+                res.erase(res.begin() + i);
+            }
+            else i += 1;
+        }
+        else
+        {
+            if (to_hexstr(res[i], 11, res[i].size() - 2, 1, 1) != "20" && to_hexstr(res[i], 11, res[i].size() - 2, 1, 1) != "10")
+            {
+                res.erase(res.begin() + i);
+            }
+            else i += 1;
+        }
+    }
     return res;
 }
 
+// Kiem tra thuoc tinh file/folder co hop le khong
 int FAT32::check_Entry(vector<vector<string>> entry)
 {
     string x;
@@ -106,6 +137,7 @@ int FAT32::check_Entry(vector<vector<string>> entry)
         return 1;
     return 0;
 }
+// Kiem tra ky tu doc duoc co nam trong bang ASCII khong
 int FAT32::check_Character(string x)
 {
     if (x[0] >= '2' && x[0] <= '7')
@@ -113,6 +145,7 @@ int FAT32::check_Character(string x)
     return 0;
 }
 
+// Lay cluster dau tien cua file/folder
 int FAT32::get_First_Cluster(vector<vector<string>> entry)
 {
     if (entry[0][11] != "0F")
@@ -125,11 +158,13 @@ int FAT32::get_First_Cluster(vector<vector<string>> entry)
     }
 }
 
+// Lay sector dau tien cua file/folder
 int FAT32::get_First_Sector(vector<vector<string>> entry)
 {
     return first_Sector_Of_Data() + 8 * (get_First_Cluster(entry) - 2);
 }
 
+// Tim thuoc tinh cua file/folder
 string FAT32::find_Attribute(vector<vector<string>> entry)
 {
     string res_hex, res_bin;
@@ -183,13 +218,26 @@ string FAT32::find_Attribute(vector<vector<string>> entry)
         return "Error!";
     }
 }
+// Tim ten file/folder
 string FAT32::find_Name(vector<vector<string>> entry)
 {
     string temp = to_hexstr(entry, 11, 0, 1, 1);
     string res = "";
     if (temp != "00" && temp != "0F")
     {
-        return hexstr_tostr(to_hexstr(entry, 0, 0, 11, 0));
+        if (temp == "10")
+        {
+            return hexstr_tostr(to_hexstr(entry, 0, 0, 11, 0));
+        }
+
+        res = hexstr_tostr(to_hexstr(entry, 0, 0, 8, 0));
+        while (res[res.length() - 1] == ' ')
+        {
+            res.erase(res.begin() + res.length() - 1);
+        }
+        res += ".";
+        res += hexstr_tostr(to_hexstr(entry, 8, 0, 3, 0));
+        return res;
     }
 
     if (temp != "00" && temp == "0F")
@@ -212,6 +260,7 @@ string FAT32::find_Name(vector<vector<string>> entry)
         return hexstr_tostr(res);
     }
 }
+// Chia ten file thanh phan ten va phan mo rong
 vector<string> FAT32::split_File_Name(string file_name, char ch)
 {
     vector<string> res;
@@ -226,16 +275,17 @@ vector<string> FAT32::split_File_Name(string file_name, char ch)
     return res;
 }
 
+// Kiem tra folder co rong khong
 int FAT32::is_Folder_Empty(vector<vector<string>> entry)
 {
     vector<vector<string>> sdet = find_table(device, get_First_Sector(entry) * 512);
-    vector<vector<vector<string>>> sdet_entry = split_Entry(sdet);
 
-    if (sdet_entry[0][0][0] == "00")
+    if (sdet[4][0] == "00")
         return 1;
     return 0;
 }
 
+// Doc du lieu file txt
 string FAT32::read_Data(int readPont, int level)
 {
     string res;
@@ -252,6 +302,7 @@ string FAT32::read_Data(int readPont, int level)
     return res;
 }
 
+// Doc thong so cua file
 void FAT32::read_File(vector<vector<string>> entry, int level)
 {
     print_Tab(level);
@@ -282,7 +333,7 @@ void FAT32::read_File(vector<vector<string>> entry, int level)
             k -= 16;
         }
         string temp = to_hexstr(FAT, k, j, 1, 1);
-        if (temp != "FF" && temp != "0F")
+        if (temp != "FF" && temp != "0F" && temp != "F8")
         {
             cluster_used.push_back(hexstr_to_int(temp));
             i += 4;
@@ -326,26 +377,9 @@ void FAT32::read_File(vector<vector<string>> entry, int level)
     {
         cout << "\n ";
         print_Tab(level);
-        cout << "--> Read " << name_fea[1] << " file:\n";
+        cout << "--> Read " << name_fea[1] << " file:";
         string res = hexstr_tostr(read_Data(sector_used[0] * 512, level));
-        vector<string> temp;
-        string fea;
-        stringstream line;
-        if (res != "")
-        {
-            line << res;
-            while (getline(line, fea, '\n'))
-                temp.push_back(fea);
-        }
-        string tab;
-        for (int i = 0; i < level; i++)
-            tab += '\t';
-        for (int i = 0; i < temp.size(); i++)
-            temp[i] = tab + temp[i];
-        res.clear();
-        for (int i = 0; i < temp.size(); i++)
-            res += temp[i];
-        cout << res;
+        cout << endl << res << endl;
     }
     else
     {
@@ -376,6 +410,7 @@ void FAT32::read_File(vector<vector<string>> entry, int level)
             cout << "WordPad" << endl;
     }
 }
+// Doc thogn so cua folder
 void FAT32::read_Folder(vector<vector<string>> entry, int level)
 {
     print_Tab(level);
@@ -441,97 +476,15 @@ void FAT32::read_Folder(vector<vector<string>> entry, int level)
             cout << ", ";
         }
     }
-}
-void FAT32::read_Not_File_Or_Folder(vector<vector<string>> entry, int level)
-{
-    int first_sector_of_data = sectors_of_boot + numbers_of_fats * sectors_per_fat;
-
-    if (find_Attribute(entry) == "Volumn Label")
-    {
-        print_Tab(level);
-        cout << "Volumn name: " << find_Name(entry);
-    }
-    else if (find_Attribute(entry) == "Error!")
-    {
-        print_Tab(level);
-        cout << "File name: " << find_Name(entry) << endl;
-        int first_cluster;
-        if (entry[0][11] != "0F")
-        {
-            first_cluster = hexstr_to_int(to_hexstr(entry, 4, 1, 2, 1) + to_hexstr(entry, 10, 1, 2, 1));
-        }
-        else
-        {
-            first_cluster = hexstr_to_int(to_hexstr(entry, 4, entry.size() - 1, 2, 1) + to_hexstr(entry, 10, entry.size() - 1, 2, 1));
-        }
-        print_Tab(level);
-        cout << "First cluster: " << first_cluster;
-
-        cout << "\n ";
-        print_Tab(level);
-        cout << "--> Cluster used: ";
-        vector<int> cluster_used;
-        int i = 4 * first_cluster;            //chi so cot trong bang fat
-        cluster_used.push_back(first_cluster);
-        while (1)
-        {
-            int k = i;
-            int j = 0;                        //chi so dong trong bang fat
-            for (j;;)
-            {
-                if (i >= 16 * (j + 1))
-                    j++;
-                else break;
-            }
-            while (k >= 16)                   //chi so cot luon < 16
-            {
-                k -= 16;
-            }
-            string temp = to_hexstr(FAT, k, j, 1, 1);
-            if (temp != "FF" && temp != "0F")
-            {
-                cluster_used.push_back(hexstr_to_int(temp));
-                i += 4;
-            }
-            else break;
-        }
-        for (int j = 0; j < cluster_used.size(); j++)
-        {
-            cout << cluster_used[j];
-            if (j < cluster_used.size() - 1)
-            {
-                cout << ", ";
-            }
-        }
-        cout << "\n ";
-        print_Tab(level);
-        cout << "--> Sector used: ";
-        vector<int> sector_used;
-        int cur_sector = first_sector_of_data + 8 * (cluster_used[0] - 2);
-        for (int j = 0; j < cluster_used.size(); j++)
-        {
-            for (int k = 0; k < sectors_per_cluster; k++)
-            {
-                sector_used.push_back(cur_sector);
-                cur_sector = cur_sector + 1;
-            }
-        }
-        for (int j = 0; j < sector_used.size(); j++)
-        {
-            cout << sector_used[j];
-            if (j < sector_used.size() - 1)
-            {
-                cout << ", ";
-            }
-        }
-    }
+    cout << endl;
 }
 
+// Doc bang RDET
 void FAT32::read_RDet(vector<vector<string>> table, int level)
 {
     FAT = find_table(device, sectors_of_boot * 512);
     vector<vector<vector<string>>> table_entry = split_Entry(table);
-
+    
     if (table_entry[0][0][0] == "00")
     {
         cout << "\n";
@@ -544,12 +497,7 @@ void FAT32::read_RDet(vector<vector<string>> table, int level)
     {
         if (table_entry[i][0][0] != "00")
         {
-            if (find_Attribute(table_entry[i]) != "Archive" && find_Attribute(table_entry[i]) != "Directory")
-            {
-                read_Not_File_Or_Folder(table_entry[i], level);
-                cout << "\n\n";
-            }
-            else if (find_Attribute(table_entry[i]) == "Archive")
+            if (find_Attribute(table_entry[i]) == "Archive")
             {
                 read_File(table_entry[i], level);
                 cout << "\n\n";
@@ -557,13 +505,13 @@ void FAT32::read_RDet(vector<vector<string>> table, int level)
             else if (find_Attribute(table_entry[i]) == "Directory")
             {
                 read_Folder(table_entry[i], level);
+                cout << "\n\n";
+
                 if (!is_Folder_Empty(table_entry[i]))
                 {
-                    cout << "\n\n";
+                    read_RDet(find_table(device, get_First_Sector(table_entry[i]) * 512), level + 1);
                 }
-                read_RDet(find_table(device, get_First_Sector(table_entry[i]) * 512), level + 1);
             }
         }
-        else return;
     }
 }
