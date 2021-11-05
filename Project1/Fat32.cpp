@@ -161,7 +161,7 @@ int FAT32::get_First_Cluster(vector<vector<string>> entry)
 // Lay sector dau tien cua file/folder
 int FAT32::get_First_Sector(vector<vector<string>> entry)
 {
-    return first_Sector_Of_Data() + 8 * (get_First_Cluster(entry) - 2);
+    return first_Sector_Of_Data() + sectors_per_cluster * (get_First_Cluster(entry) - 2);
 }
 
 // Tim thuoc tinh cua file/folder
@@ -260,6 +260,7 @@ string FAT32::find_Name(vector<vector<string>> entry)
         return hexstr_tostr(res);
     }
 }
+
 // Chia ten file thanh phan ten va phan mo rong
 vector<string> FAT32::split_File_Name(string file_name, char ch)
 {
@@ -410,6 +411,7 @@ void FAT32::read_File(vector<vector<string>> entry, int level)
             cout << "WordPad" << endl;
     }
 }
+
 // Doc thogn so cua folder
 void FAT32::read_Folder(vector<vector<string>> entry, int level)
 {
