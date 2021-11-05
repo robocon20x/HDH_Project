@@ -137,6 +137,7 @@ int FAT32::check_Entry(vector<vector<string>> entry)
         return 1;
     return 0;
 }
+
 // Kiem tra ky tu doc duoc co nam trong bang ASCII khong
 int FAT32::check_Character(string x)
 {
@@ -218,6 +219,7 @@ string FAT32::find_Attribute(vector<vector<string>> entry)
         return "Error!";
     }
 }
+
 // Tim ten file/folder
 string FAT32::find_Name(vector<vector<string>> entry)
 {
@@ -422,7 +424,7 @@ void FAT32::read_File(vector<vector<string>> entry, int level)
     }
 }
 
-// Doc thogn so cua folder
+// Doc thong so cua folder
 void FAT32::read_Folder(vector<vector<string>> entry, int level)
 {
     print_Tab(level);

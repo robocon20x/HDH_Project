@@ -72,6 +72,10 @@ int main(int argc, char** argv)
         NTFS drive(disk, sector);
         cout << "--------------------|DRIVE INFO|--------------------\n";
         drive.readBoot_Sector();
+
+        vector<vector<string>> k = find_table(disk, 6291456 * 512);
+
+        print_table(k);
     }
 
     return 1;

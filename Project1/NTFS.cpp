@@ -25,3 +25,9 @@ void NTFS::readBoot_Sector()
 
 	cout << "- MFT mirror begin at: " << hexstr_to_int(to_hexstr(BootSector, 8, 3, 8, 1)) << endl;
 }
+
+void NTFS::read_MFT()
+{
+	vector<vector<string>> MFT = find_table(device, begin_MFT * 512);
+
+}

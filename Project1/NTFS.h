@@ -16,6 +16,8 @@ public:
 	NTFS(HANDLE disk, vector<vector<string>> sector);
 
 	void readBoot_Sector();
+
+	void read_MFT();
 };
 
 #endif

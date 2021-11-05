@@ -84,7 +84,7 @@ vector<vector<string>> combine_table(vector<vector<string>> v1, vector<vector<st
 
 bool is_end(vector<vector<string>> vec) {
     for (int i = 0; i < vec[0].size(); i++) {
-        if (vec[vec.size()-1][i] != "00") return false;
+        if (vec[vec.size()-1][i] != "00" ) return false;
     }
     return true;
 }
@@ -94,8 +94,10 @@ vector<vector<string>> find_table(HANDLE device, int readPont)
     DWORD bytesRead;
     BYTE sector[512];
 
+    long a = 0x0;
+
     vector<vector<string>> result;
-    SetFilePointer(device, readPont, NULL, FILE_BEGIN);//Set a Point to Read
+    SetFilePointer(device, readPont, &a, FILE_BEGIN);//Set a Point to Read
 
     if (!ReadFile(device, sector, 512, &bytesRead, NULL))
     {
@@ -122,6 +124,7 @@ void print_table(vector<vector<string>> vec) {
     }
     return;
 }
+
 void print_Tab(int k)
 {
     if (k == 0)
