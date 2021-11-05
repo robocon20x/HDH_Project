@@ -161,7 +161,7 @@ int FAT32::get_First_Cluster(vector<vector<string>> entry)
 // Lay sector dau tien cua file/folder
 int FAT32::get_First_Sector(vector<vector<string>> entry)
 {
-    return first_Sector_Of_Data() + 8 * (get_First_Cluster(entry) - 2);
+    return first_Sector_Of_Data() + sectors_per_cluster * (get_First_Cluster(entry) - 2);
 }
 
 // Tim thuoc tinh cua file/folder
@@ -308,7 +308,8 @@ void FAT32::read_File(vector<vector<string>> entry, int level)
     print_Tab(level);
     cout << "File name: " << find_Name(entry) << endl;
     print_Tab(level);
-    cout << "Size: " << hexstr_to_int(to_hexstr(entry, 12, entry.size() - 1, 4, 1)) << endl;
+    int size_of_file = hexstr_to_int(to_hexstr(entry, 12, entry.size() - 1, 4, 1));
+    cout << "Size: " << size_of_file << endl;
     print_Tab(level);
     cout << "First cluster: " << get_First_Cluster(entry);
 
@@ -375,11 +376,20 @@ void FAT32::read_File(vector<vector<string>> entry, int level)
     string ext = name_fea[1];
     if (ext == "txt" || ext == "TXT")
     {
-        cout << "\n ";
-        print_Tab(level);
-        cout << "--> Read " << name_fea[1] << " file:";
-        string res = hexstr_tostr(read_Data(sector_used[0] * 512, level));
-        cout << endl << res << endl;
+        if (size_of_file != 0)
+        {
+            cout << "\n ";
+            print_Tab(level);
+            cout << "--> Read " << name_fea[1] << " file:\n";
+            string res = hexstr_tostr(read_Data(sector_used[0] * 512, level));
+            cout << res << endl;
+        }
+        else
+        {
+            cout << "\n";
+            print_Tab(level);
+            cout << "File " << name_fea[1] << " is empty!\n";
+        }
     }
     else
     {
