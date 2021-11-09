@@ -57,7 +57,7 @@ int main(int argc, char** argv)
 
     // chuyen chuoi string hex thanh int
     string result = hexstr_tostr(temp);
-    
+
     if (result == "FAT32")
     {
         FAT32 drive(disk, sector);
@@ -72,10 +72,8 @@ int main(int argc, char** argv)
         NTFS drive(disk, sector);
         cout << "--------------------|DRIVE INFO|--------------------\n";
         drive.readBoot_Sector();
-
-        vector<vector<string>> k = find_table(disk, 6291456 * 512);
-
-        print_table(k);
+        cout << "\n-----------------------|MFT|-----------------------\n";
+        drive.read_MFT(find_table(disk, drive.get_first_sector_MFT() * 512), drive);
     }
 
     return 1;

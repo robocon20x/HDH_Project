@@ -17,7 +17,15 @@ public:
 
 	void readBoot_Sector();
 
-	void read_MFT();
+	void read_MFT(vector<vector<string>>, NTFS);
+
+	int get_first_sector_MFT();
+
+	vector<string> split_File_Name(string, char);
+
+	string get_ext_file(string, NTFS);
+
+	string get_type_file(string);
 };
 
 #endif
