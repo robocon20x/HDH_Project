@@ -41,4 +41,12 @@ void print_table(vector<vector<string>> vec);
 //in tab ra man hinh
 void print_Tab(int k);
 
+string getOpener(string ext);
+
+vector<string> split_File_Name(string file_name, char ch);
+
+string get_ext_file(string file_name);
+
+
+
 #endif // !_UTIL_H_

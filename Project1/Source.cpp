@@ -74,6 +74,7 @@ int main(int argc, char** argv)
         drive.readBoot_Sector();
         cout << "\n-----------------------|MFT|-----------------------\n";
         drive.read_MFT(find_table(disk, drive.get_first_sector_MFT() * 512), drive);
+        drive.findSubDirectory();
     }
 
     return 1;
