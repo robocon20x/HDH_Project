@@ -72,10 +72,6 @@ void NTFS::findSubDirectory(int parentID, int numTab)
 	}
 }
 
-
-
-
-
 void NTFS::read_MFT(vector<vector<string>> k, NTFS drive)
 {
 	//vector<vector<string>> k = find_table(disk, drive.get_first_sector_MFT() * 512);
