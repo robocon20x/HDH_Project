@@ -5,6 +5,6 @@ int main()
 {
 	char name[MAX_LENGTH];
 	ReadString(name,MAX_LENGTH);
-	PrintInt(name);
+	PrintString(name);
 	return 1;
 }

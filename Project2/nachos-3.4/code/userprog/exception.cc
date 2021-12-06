@@ -376,17 +376,17 @@ void ExceptionHandler(ExceptionType which)
 				case SC_PrintString:
 				{
 					// Input: Buffer(char*)
-					// Output: Chuoi doc duoc tu buffer(char*)
-					// Cong dung: Xuat mot chuoi la tham so buffer truyen vao ra man hinh
+					// Output: String read in buffer(char*)
+					// Purpose: Print a string from argument buffer to console
 					int virtAddr;
 					char* buffer;
-					virtAddr = machine->ReadRegister(4); // Lay dia chi cua tham so buffer tu thanh ghi so 4
-					buffer = User2System(virtAddr, 255); // Copy chuoi tu vung nho User Space sang System Space voi bo dem buffer dai 255 ki tu
+					virtAddr = machine->ReadRegister(4); // Take address of argument buffer from register 4
+					buffer = User2System(virtAddr, 255); // Copy string from User Space to System Space with buffer langth 255 character
 					int length = 0;
-					while (buffer[length] != 0) length++; // Dem do dai that cua chuoi
-					gSynchConsole->Write(buffer, length + 1); // Goi ham Write cua SynchConsole de in chuoi
+					while (buffer[length] != 0) length++; // Count length of buffer
+					gSynchConsole->Write(buffer, length + 1); // Call function Write of SynchConsole to write string
 					delete buffer; 
-					IncreasePC(); // Tang Program Counter 
+					IncreasePC(); // Increase Program Counter 
 					return;
 					break;
 				}
